@@ -4,11 +4,11 @@ File extract_method.py contains a script that extracts method code, given its fu
 
 **Usage:** `python extract_method.py <language> <path> <fully qualified method name>`
 
-For Java language program just look inside the file with the class name. Then, method with given name is searched inside this class. 
+For Java language, the program just looks inside the file with the class name. Then, the method with the given name is searched inside this class. 
 
-For Kotlin program, it is assumed that directory structure follows the package structure (it is only a recommended naming convention in Kotlin). Two cases are considered:
-- method is inside the class. In this case, all files in the directory are considered and the class with given name is searched inside them. Then, method with given name is searched inside this class.
-- method is not method of any class. In this case, all files in the directory are considered and method with given name is searched inside them.
+For the Kotlin language, it is assumed that the directory structure follows the package structure (it is only a recommended naming convention in Kotlin). Two cases are considered:
+- method is inside the class. In this case, all files in the directory are considered and the class with the given name is searched inside them. Then, the method with the given name is searched inside this class.
+- method is not a method of any class. In this case, all files in the directory are considered, and the method with the given name is searched inside them.
 
 So, in the code
 
@@ -27,7 +27,7 @@ class A {
 
 ```
 
-method with name `com.example.foo` is referred to the first one and method with name `com.example.A.foo` is referred to the second one.
+method with name `com.example.foo` is referred to as the first one and method with name `com.example.A.foo` is referred to as the second one.
 
 
 
