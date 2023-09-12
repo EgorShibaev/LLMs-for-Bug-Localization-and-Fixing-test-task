@@ -43,7 +43,7 @@ def extract_method_code(repository_path: str, full_method_name: str, language: s
                 if not match:
                     continue
                 # extract the code of the class
-                class_code = extract_code_block(content, match.start())
+                class_code = extract_code_block(content, match.start())[0]
                 # when we found class we know for sure that the method is inside this class
                 method_code = extract_method_code_from_code(class_code, method_name, language)
                 return method_code
@@ -59,11 +59,26 @@ def extract_method_code(repository_path: str, full_method_name: str, language: s
         package_path = package.replace(".", os.path.sep)
         file_path = os.path.join(repository_path, "src", "main", language, package_path)
         for file in os.listdir(file_path):
+
             if file.endswith(".kt"):
                 with open(os.path.join(file_path, file), "r") as f:
                     content = f.read()
-                
-                # find the method inside the content
+                # now we should not look inside the classes because 
+                # we are looking for method outside any class
+                # so content of each class is deleted from the code
+
+                # find all classes inside the content
+                class_pattern = re.compile(rf"\s+class\s+")
+            
+                match = class_pattern.search(content)
+                while match != None:
+                    # extract the code of the class
+                    class_code, end_position = extract_code_block(content, match.start())
+                    content = content[:match.start()] + content[end_position:]
+
+                    match = class_pattern.search(content)
+
+                # find the method inside the content without classes
                 method_code = extract_method_code_from_code(content, method_name, language)
                 if method_code != None:
                     return method_code
@@ -88,7 +103,7 @@ def extract_method_code_from_code(code, method_name, language):
     if not match:
         return None
 
-    return extract_code_block(code, match.start())
+    return extract_code_block(code, match.start())[0]
 
 
 def extract_code_block(code, start_position):
@@ -96,7 +111,7 @@ def extract_code_block(code, start_position):
     Extracts the code block starting at the given position according to the opening and closing braces
     :param code: Java or Kotlin code
     :param start_position: position of the opening brace of the code block
-    :return: code block
+    :return: code block and end position of the code block
     """
     open_braces = 0
     code_block_start = start_position
@@ -117,7 +132,7 @@ def extract_code_block(code, start_position):
     while code[code_block_start] == "\n":
         code_block_start += 1
 
-    return code[code_block_start:code_block_end]
+    return code[code_block_start:code_block_end], code_block_end
 
 
 def main(repository_path, fully_qualified_method_name, language):
