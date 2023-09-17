@@ -1,7 +1,7 @@
 # Test task
 
 In this project, I implemented a program that extracts method code, given its fully qualified name and path to the repository. This program supports both Java and Kotlin languages.
-- Java is supported by using `javalang` library for Java code parsing.
+- Java is supported by using `javalang` library for Java code parsing. javalang provides a lexer and parser targeting __Java 8__
 - Kotlin is supported by finding method definition in source code using regex.
 
 ## Java
